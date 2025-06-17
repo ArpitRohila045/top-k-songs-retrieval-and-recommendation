@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block body%}
+
+<div id="index-container">
+
+    <div class="left"></div>
+
+    <div class="right">
+
+        <div class="login-form">
+            <div class="login-info">
+                <h3>Account login</h3>
+            </div>
+
+            <form id="auth-form" action="{{ url_for('login') }}" method="post">
+                <div class="input-username">
+                    <input type="text" name="username" placeholder="Enter your username" required>
+                </div>
+
+                <div class="input-password">
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="login">
+                    <input type="submit" value="Login" class="btn-field" onclick="setAction('login')">
+                </div>
+
+                <div class="signup">
+                    <input type="submit" value="Register" class="btn-field" onclick="setAction('register')">
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function setAction(action) {
+
+        // Get the form element by its ID
+        let form = document.getElementById("auth-form");
+
+        // Set the action attribute based on the button clicked
+        if (action === "login") {
+            form.action = "{{ url_for('login') }}";
+        } else if (action === "register") {
+            form.action = "{{ url_for('register') }}";
+        }
+
+        // Set the method to POST for both actions
+        form.method = "post";
+        form.submit();
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,163 @@
+body{
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(76, 122, 90);
+}
+
+.main-text{
+    height : fit-content;
+    width : fit-content;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: rgb(255, 255, 255);
+    position: absolute;
+}
+
+#index-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+#index-container .left,
+#index-container .right {
+    flex: 1;
+    height: 100%;
+}
+
+#index-container .left {
+    /* background-color: red; */
+}
+
+#index-container .right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: blue; Use a different color for clarity */
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    height: 25rem;
+    max-width: 45rem;
+    width: 30rem;
+    background: white;
+    border-radius: 50px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.login-info {
+    text-align: center;
+    width: 100%;
+    font-size: xx-large;
+    line-height: 0;
+    margin-top: 50px;
+    letter-spacing: 5px;
+    word-spacing: 4px;
+}
+
+#auth-form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-username .input-password{
+    width: 100%;
+    margin: 10px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.btn-field {
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn-field:hover {
+    background-color: #0056b3;
+}
+
+#top-listned {
+    background-color: red;
+    height: 400px;
+    width: 100%;
+}
+
+#top-listned ul {
+    position: relative; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    display: flex;
+    flex-direction: row;
+    gap: 22px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+
+    /* Hide scrollbars */
+    scrollbar-width: none;        
+}
+
+#top-listned li {
+    flex-shrink: 0;
+    width: 300px;
+    height: 300px;
+    background: #f4f4f4;
+    padding: 15px;
+    border-radius: 45px;
+    box-shadow: 7px 4px 15px rgb(0 0 0 / 57%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: justify;
+}
+
+#top-listned form {
+    margin-top: 10px;
+}
+
+.play-button {
+    background-color: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.play-button:hover {
+    background-color: #0056b3;
+}
+
+/* Optional: Hide scroll bar but still scroll */
+#top-listned ul::-webkit-scrollbar {
+    display: none;
+}
+
+
+
