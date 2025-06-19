@@ -60,9 +60,6 @@ coverage.xml
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Flask/SQLAlchemy database
-*.db
-*.sqlite3
 
 # Environment variables
 .env
