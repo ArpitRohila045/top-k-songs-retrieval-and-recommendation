@@ -1,17 +1,17 @@
-import zipfile
-import os
 from abc import ABC, abstractmethod
 from pyspark.sql import SparkSession, DataFrame
 import pandas as pd
+import logging
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname) %(message)s')
 
 class DataIngerstor(ABC):
+
     """
     Abstract base class for data ingestion.
     """
-    
     @abstractmethod
-    def ingest(self, zip_file_path: str) -> None:
+    def ingest(self, zip_file_path: str) -> pd.DataFrame:
         """
         Unzip the given file to the specified directory.
         """
@@ -20,10 +20,10 @@ class DataIngerstor(ABC):
 
 # Implementing the ZipDataIngestor class 
 class ZipDataIngestor(DataIngerstor):
+
     """
     Concrete implementation of DataIngerstor for zip files.
     """
-    
     def ingest(self, file_path: str, seprator : str) -> pd.DataFrame:
         """
         Unzip the given file to the specified directory.
@@ -45,20 +45,24 @@ class ZipDataIngestor(DataIngerstor):
     
 # Data Ingestion Factory
 class DataIngestorFactory:
+
     """
     Factory class to create data ingestor instances>
     """
-
     @staticmethod
     def get_data_ingestor(file_extension: str) -> DataIngerstor:
 
+        logging.info("Request for data Ingestor")
+        ingestor : DataIngestor
         if file_extension == ".zip":
-            return ZipDataIngestor()
+            ingestor = ZipDataIngestor()
         else:
             raise ValueError(f"Unsupported file extension: {file_extension}")
-        
-# Example usage
 
+        logging.info("Ingestor provided")
+        return ingestor
+    
+# Example usage
 if __name__ == "__main__":
     # # session = SparkSession.builder\
     # #     .appName("Dataingestion")\

@@ -2,11 +2,12 @@ import pandas as pd
 import numpy as np
 import logging
 from typing import List, Tuple
-
+import logging
 from abc import ABC, abstractmethod
 
-class DataTranfromer(ABC):
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
+class DataTranfromer(ABC):
     @abstractmethod
     def transform(self, df : pd.DataFrame) -> pd.DataFrame:
         """
@@ -14,11 +15,12 @@ class DataTranfromer(ABC):
         """
         pass
 
+
 class DataFrameToList(DataTranfromer):
+    
     """
     Concrete implementation of DataTranfromer to convert DataFrame to list.
     """
-    
     def transform(self, df: pd.DataFrame) -> List[Tuple]:
         """
         Convert the DataFrame to a list of lists.

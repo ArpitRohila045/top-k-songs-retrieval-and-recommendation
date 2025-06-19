@@ -8,18 +8,15 @@ db = SQLAlchemy()
 class UserSongHistory(db.Model):
     __tablename__ = "user_song_history"
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    song_id = db.Column(db.Integer, db.ForeignKey("songs.id"), nullable=False)
-    
-    play_count = db.Column(db.Integer, default=0)
-    start_time = db.Column(db.DateTime)
-    is_favourite = db.Column(db.Boolean, default=False)
-
     user = db.relationship("User", back_populates="song_history")
     song = db.relationship("Song", back_populates="user_history")
 
-
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    song_id = db.Column(db.Integer, db.ForeignKey("songs.id"), nullable=False)
+    play_count = db.Column(db.Integer, default=0)
+    start_time = db.Column(db.DateTime)
+    is_favourite = db.Column(db.Boolean, default=False)
 
 
 # Update your User and Song models like this:
@@ -70,7 +67,8 @@ class OLAPDatabase(db.Model):
     __tablename__ = "olap_database"
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False, unique=True)
+    
+    title = db.Column(db.String(100), nullable=False)
     artist = db.Column(db.String(100), nullable=False)
     top_genre = db.Column(db.String(100), nullable=False)
     year = db.Column(db.Integer, nullable=False)

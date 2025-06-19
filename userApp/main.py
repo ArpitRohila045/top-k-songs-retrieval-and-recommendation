@@ -3,12 +3,11 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from annoy.model_query import QueryModel
 from annoy.pipline import pipline
 import numpy as np
+import pandas as pd
 from typing import List
 from MapReduceJob.mr_job import TopRankingSongs
 from Models.models import User, Song, OLAPDatabase, UserSongHistory, db
-import csv
-import random
-import pandas as pd
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 app.secret_key = "UserAppSecretKey"
@@ -65,7 +64,7 @@ def dashboard():
     
     user = User.query.get(session["user_id"])
     listnedSongs = user.song_history
-    top_ranking_songs = OLAPDatabase.query.all()
+    top_ranking_songs = OLAPDatabase.query.order_by(OLAPDatabase.count.desc()).all()
     return render_template("dashboard.html", username=user.username, songs=top_ranking_songs)
 
 
@@ -77,21 +76,31 @@ def logout():
 
 @app.route("/play/<int:song_id>" , methods=["POST"])
 def play_song(song_id):
+
     song = Song.query.get(song_id)
+    user_id = session.get("user_id")
+
     if not song:
         return "Song not found", 404
 
-    #increment song count by 1
+    # Increment song count by 1
     song.count += 1
 
-    user_id = session.get("user_id")
     user_song_history = UserSongHistory.query.filter_by(user_id=user_id, song_id=song.id).first()
-    user_song_history.is_favourite = request.form.get("is_favourite", "off") == "on"
+    is_favourite = request.form.get("is_favourite", "off") == "on"
 
     if user_song_history:
         user_song_history.play_count += 1
+        user_song_history.end_time = datetime.now()
+        user_song_history.is_favourite = is_favourite
     else:
-        user_song_history = UserSongHistory(id=user_id, song_id=song.id, play_count=1, start_time=datetime.now())
+        user_song_history = UserSongHistory(
+            user_id=user_id,
+            song_id=song.id,
+            play_count=1,
+            start_time=datetime.now(),
+            is_favourite=is_favourite
+        )
         db.session.add(user_song_history)
 
     db.session.commit()
@@ -115,8 +124,20 @@ def play_song(song_id):
     return render_template("play.html", playingSong=song, recommendedSongs=recommendedSongsObj)
 
 
+
+#Helper function for recommendatation and return list
 def recommendatation(qVector : np.ndarray) -> List[tuple]:
-    return qModel.query.query_tree(q_vec=qVector, k=10)
+    return qModel.query_tree(q_vec=qVector, k=10)
+
+
+
+#Helper function for Map Reduce job 
+def mrjob():
+    with app.app_context():
+        mrjob = TopRankingSongs()
+        songs = Song.query.all()
+        mrjob.execute(db, songs)
+
 
 
 # Init DB & Test Data
@@ -125,12 +146,11 @@ if __name__ == "__main__":
         db.create_all()
         db.session.commit()
         
-        mrjob = TopRankingSongs()
-        songs = Song.query.all()
+        scheduler = BackgroundScheduler()
+        scheduler.add_job(mrjob, 'interval' , minutes=1)
+        scheduler.start()
 
-        mrjob.mapReduce(db, songs)
+        pipline = pipline()
+        qModel = pipline.query
 
         app.run(debug=True)
-
-
-

@@ -1,8 +1,10 @@
-import pandas as pd
 import numpy as np
 from typing import List
+import logging
 
 from annoy.model import Node
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 class QueryModel:
     def __init__(self, root : Node):
@@ -32,10 +34,21 @@ class QueryModel:
 
     @staticmethod
     def _query_linear(nns : list, q_vec : np.ndarray, k : int) -> List[tuple]:
-        return sorted(nns , key=lambda v: QueryModel.cosine_similarity(v[1],q_vec))[-k:]
+        logging.info("Linear query started!")
+        
+        try:
+            linearq = sorted(nns , key=lambda v: QueryModel.cosine_similarity(v[1],q_vec))[-k:]
+        except Exception as e:
+            logging.error(f"Error during linear query: {e}")
+            return []
+        
+        logging.info("Linear query compleated!")
+        return linearq
 
 
     def query_tree(self, q_vec : np.ndarray , k :int) -> List[tuple]:
+
+        logging.info("Query on tree started!")
         pq = [self.root]
         nns = []
 
@@ -48,4 +61,7 @@ class QueryModel:
             else:
                 nns.extend(node.songs)
 
-        return self._query_linear(nns , q_vec , k)
+        unranklist = self._query_linear(nns, q_vec, k)
+
+        logging.info("Query tree compleated!")
+        return unranklist

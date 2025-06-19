@@ -3,13 +3,15 @@ from annoy.data_transformation import DataFrameToList, DataTranfromer
 from annoy.model_traning import AnnoyModel
 from annoy.model_query import QueryModel
 from annoy.model import Node
+import logging
 
-
-import numpy as np
+logging.basicConfig(level=logging.INFO , format='%(asctime)s %(levelname)s %(meassage)s')
 
 class pipline:
-     
     def __init__(self):
+
+        logging.info("Main Pipelining Has Started")
+
         file_path = "C:\\Users\\hp\\Downloads\\archive (1)\\song_data.csv.csv"
         sep = ";"
         data = ZipDataIngestor()
@@ -18,7 +20,6 @@ class pipline:
         transformer = DataFrameToList()
         transformed_data = transformer.transform(df)
 
-
         # Training the model
         model = AnnoyModel(K=10, imb=0.5)
         root = Node(None , transformed_data)
@@ -26,5 +27,7 @@ class pipline:
 
         # Querying the model
         self.query = QueryModel(root)
+
+        logging.info("Task Compleated! Closing pipeline.")
 
 

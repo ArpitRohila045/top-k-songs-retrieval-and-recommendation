@@ -1,35 +1,281 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing - {{ playingSong.title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% block body %}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #121212, #1e1e1e);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-<div class="play-container">
+        .header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
 
-    <div class="playing-song-section">
-        <div class="playing-song-image">
-            <div class="image">
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .now-playing {
+            text-align: center;
+            margin-bottom: 50px;
+            max-width: 600px;
+        }
+
+        .now-playing-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .song-artwork-large {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            margin: 30px auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .song-details {
+            margin-bottom: 30px;
+        }
+
+        .song-title-large {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .song-artist-large {
+            font-size: 1.5rem;
+            color: #b3b3b3;
+            margin-bottom: 10px;
+        }
+
+        .song-info-large {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .recommendations {
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 50px;
+        }
+
+        .recommendations-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .recommendation-card {
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .rec-artwork {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .rec-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .rec-artist {
+            color: #b3b3b3;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .rec-genre {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .now-playing-title {
+                font-size: 2rem;
+            }
+
+            .song-artwork-large {
+                width: 250px;
+                height: 250px;
+                font-size: 4rem;
+            }
+
+            .song-title-large {
+                font-size: 2rem;
+            }
+
+            .song-artist-large {
+                font-size: 1.2rem;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            ♪ Softify
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="back-btn">← Back to Dashboard</a>
+    </header>
+
+    <main class="main-content">
+        <div class="now-playing">
+            <h1 class="now-playing-title">Now Playing</h1>
+            
+            <div class="song-artwork-large">
+                🎵
+            </div>
+            
+            <div class="song-details">
+                <div class="song-title-large">{{ playingSong.title }}</div>
+                <div class="song-artist-large">{{ playingSong.artist }}</div>
+                <div class="song-info-large">{{ playingSong.year }} • {{ playingSong.top_genre }}</div>
             </div>
         </div>
-        <div class="playing-song-discription">
-            <div class="discription">
-                <h3>{{playingSong.title}}</h3>
-                <h2>{{playingSong.artist}}</h2>
-                <h1>{{playingSong.year}}</h1>
-            </div>
-        </div>
-    </div>
 
-    <div class="remommended-song-section">
-            {% for rSong in recommendedSongs %}
-                <div class="song">
-                    {{rSong.title}} by {{rSong.artist}} ({{rSong.year}})
-                    <form action="{{ url_for('play_song', song_id = rSong.id)}}" method="post">
-                        <button type="submit">Play</button>
-                    </form>
+        {% if recommendedSongs %}
+        <div class="recommendations">
+            <h2 class="recommendations-title">🎯 Recommended for You</h2>
+            <div class="recommendations-grid">
+                {% for song in recommendedSongs %}
+                <div class="recommendation-card" onclick="playRecommendation('{{ song.id }}')">
+                    <div class="rec-artwork">🎶</div>
+                    <div class="rec-title">{{ song.title }}</div>
+                    <div class="rec-artist">{{ song.artist }}</div>
+                    <div class="rec-genre">{{ song.top_genre }}</div>
                 </div>
-            {% endfor %}
-    </div>
-</div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </main>
 
+    <script>
+        function playRecommendation(songId) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/play/${songId}`;
+            document.body.appendChild(form);
+            form.submit();
+        }
 
-{% endblock %}
+        // Add loading animations
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.recommendation-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

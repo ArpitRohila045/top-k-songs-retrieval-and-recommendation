@@ -1,10 +1,9 @@
 import pandas as pd
-import numpy as np
 import logging
-from typing import List, Tuple
 from annoy.model import Node
 
 from abc import ABC, abstractmethod
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 class Model(ABC):
     """
@@ -26,9 +25,10 @@ class AnnoyModel(Model):
         self.K = K
         self.imb = imb
         self.root = None
+        logging.info("Model Initalized")
+
 
     def train(self, root):
-        
         root.split(self.K, self.imb)
         if root.left :
             self.train(root.left)
