@@ -12,7 +12,7 @@ class pipline:
 
         logging.info("Main Pipelining Has Started")
 
-        file_path = "C:\\Users\\hp\\Downloads\\archive (1)\\song_data.csv.csv"
+        file_path = "C:\\Projects\\root\\userApp\\Data Frame\\song_data.csv"
         sep = ";"
         data = ZipDataIngestor()
         df = data.ingest(file_path, sep)
